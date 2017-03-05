@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "org.codepond.imdemo"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 100000
+        versionName "1.0.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibVersion"
+    compile 'org.igniterealtime.smack:smack-core:4.1.8'
+    compile 'org.igniterealtime.smack:smack-tcp:4.1.8'
+    compile 'org.igniterealtime.smack:smack-im:4.1.8'
+    compile 'org.igniterealtime.smack:smack-android:4.1.8'
+//    compile 'org.igniterealtime.smack:smack-extensions:4.1.8'
+
+    compile "com.google.firebase:firebase-messaging:$playServicesVersion"
+    compile "com.google.firebase:firebase-auth:$playServicesVersion"
+    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+    testCompile 'junit:junit:4.12'
+}
+
+configurations {
+    all*.exclude group: 'xpp3', module: 'xpp3'
+}
+
+apply plugin: 'com.google.gms.google-services'

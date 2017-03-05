@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "798403773849",
+    "firebase_url": "https://imdemo-348de.firebaseio.com",
+    "project_id": "imdemo-348de",
+    "storage_bucket": "imdemo-348de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798403773849:android:57cae412f1adc908",
+        "android_client_info": {
+          "package_name": "org.codepond.imdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "798403773849-p6aavvpdfmcdhh1qe4pukrgbgadi0k66.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.codepond.imdemo",
+            "certificate_hash": "1EAE4540D67A376A21D6ED4F5A78182CAE3FFFE9"
+          }
+        },
+        {
+          "client_id": "798403773849-ftfegcuqqs4om9uil98tgfs9mdi6h6b9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCG1TpyVCVnRkgf_fQDQppYx7SJ30MeJj0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "798403773849-ftfegcuqqs4om9uil98tgfs9mdi6h6b9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

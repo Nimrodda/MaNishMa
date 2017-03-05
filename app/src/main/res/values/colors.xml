@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#128C7E</color>
+    <color name="colorPrimaryDark">#075E54</color>
+    <color name="colorAccent">#00897B</color>
+    <color name="timestamp">#767676</color>
+    <color name="chat_background">#ECE5DD</color>
+    <color name="chat_bubble_outgoing">#DCF8C6</color>
+</resources>

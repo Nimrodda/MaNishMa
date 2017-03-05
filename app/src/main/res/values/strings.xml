@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name" translatable="false">MaNishMa</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="intro_text">Welcome to MaNishMa?\nPress the button to login</string>
+</resources>
