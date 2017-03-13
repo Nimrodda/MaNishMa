@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import org.codepond.imdemo.chat.ChatActivity;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
@@ -38,15 +39,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class XmppConnectionService extends Service {
+public class XmppConnectionService extends Service implements MessagingService {
     public class LocalBinder extends Binder {
         public XmppConnectionService getService() {
             return XmppConnectionService.this;
         }
-    }
-
-    public interface XmppEventListener {
-        void onMessageReceived(ChatMessage chatMessage);
     }
 
     private class MainHandler extends Handler {
@@ -58,10 +55,11 @@ public class XmppConnectionService extends Service {
 
         @Override
         public void handleMessage(Message msg) {
-            if (mXmppEventListener != null) {
+            if (mOnMessageReceivedListener != null) {
                 switch (msg.what) {
                     case MSG_RECEIVED:
-                        mXmppEventListener.onMessageReceived((ChatMessage) msg.obj);
+                        mOnMessageReceivedListener.onMessageReceived((ChatMessage) msg.obj);
+                        break;
                 }
             }
         }
@@ -127,8 +125,7 @@ public class XmppConnectionService extends Service {
     private Queue<ChatMessage> mMessageQueue = new LinkedList<>();
     private Map<String, String> mChatThreads = new HashMap<>();
     private String mCurrentParticipant;
-    private XmppEventListener mXmppEventListener;
-
+    private OnMessageReceivedListener mOnMessageReceivedListener;
 
     public static boolean bindService(Context context, String username, String password, ServiceConnection serviceConnection) {
         Intent intent = new Intent(context, XmppConnectionService.class);
@@ -185,17 +182,20 @@ public class XmppConnectionService extends Service {
         return false;
     }
 
+    @Override
     public void sendMessage(ChatMessage chatMessage) {
         mMessageQueue.offer(chatMessage);
         processMessages();
     }
 
+    @Override
     public void setCurrentParticipant(String jid) {
         mCurrentParticipant = jid;
     }
 
-    public void setXmppEventListener(XmppEventListener listener) {
-        mXmppEventListener = listener;
+    @Override
+    public void setOnMessageReceivedListener(OnMessageReceivedListener listener) {
+        mOnMessageReceivedListener = listener;
     }
 
     private void connect() {
