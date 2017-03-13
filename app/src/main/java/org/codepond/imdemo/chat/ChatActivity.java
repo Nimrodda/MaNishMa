@@ -19,54 +19,59 @@ import org.codepond.imdemo.R;
 import org.codepond.imdemo.XmppConnectionService;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class ChatActivity extends BaseActivity implements ChatContracts.View {
     public static final String EXTRA_PARTICIPANT_JID = "extra_participant_jid";
     private MessageAdapter mAdapter;
     private EditText mMessageText;
     private RecyclerView mRecyclerView;
-    private String mParticipantJid;
-    private ChatContracts.Presenter mPresenter;
+    @Inject ChatContracts.Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mParticipantJid = getIntent().getStringExtra(EXTRA_PARTICIPANT_JID);
+        String participantJid = getIntent().getStringExtra(EXTRA_PARTICIPANT_JID);
+        DaggerChatComponent.builder().chatModule(new ChatModule(participantJid, this)).build().inject(this);
         setContentView(R.layout.activity_chat);
         mRecyclerView = (RecyclerView) findViewById(R.id.message_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         layoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new MessageAdapter(new ArrayList<ChatMessage>());
+        mAdapter = new MessageAdapter();
         mRecyclerView.setAdapter(mAdapter);
         mMessageText = (EditText) findViewById(R.id.message_text);
         findViewById(R.id.button_send).setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View view) {
-                if (mMessageText.getText().length() > 0) {
-                    String message = mMessageText.getText().toString();
-                    mMessageText.setText("");
-                    ChatMessage chatMessage = new ChatMessage("test@localhost", mParticipantJid, message, false, System.currentTimeMillis());
-                    mPresenter.sendMessage(chatMessage);
-                }
+                mPresenter.sendMessage(mMessageText.getText().toString());
             }
         });
-        mPresenter = new ChatPresenter(this);
+        mPresenter.loadMessages();
     }
 
     @Override
-    public void addMessage(ChatMessage message) {
-        mAdapter.addMessage(message);
+    public void showMessages(List<ChatMessage> chatMessages) {
+        mAdapter.setMessages(chatMessages);
+    }
+
+    @Override
+    public void notifyNewMessageAdded() {
+        mAdapter.notifyNewMessageAdded();
         mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount());
+    }
+
+    @Override
+    public void cleanUserInput() {
+        mMessageText.setText("");
     }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         MessagingService messagingService = ((XmppConnectionService.LocalBinder)service).getService();
-        messagingService.setCurrentParticipant(mParticipantJid);
         mPresenter.setMessagingService(messagingService);
     }
 
@@ -76,11 +81,7 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
     }
 
     private class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
-        private final List<ChatMessage> mMessages;
-
-        MessageAdapter(List<ChatMessage> messages) {
-            mMessages = messages;
-        }
+        private List<ChatMessage> mMessages;
 
         @Override
         public MessageAdapter.MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -124,13 +125,17 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
 
         @Override
         public int getItemCount() {
-            return mMessages.size();
+            return mMessages != null ? mMessages.size() : 0;
         }
 
-        void addMessage(ChatMessage message) {
-            mMessages.add(message);
+        void notifyNewMessageAdded() {
             final int newMessagePosition = mMessages.size();
             mAdapter.notifyItemInserted(newMessagePosition);
+        }
+
+        void setMessages(List<ChatMessage> chatMessages) {
+            mMessages = chatMessages;
+            notifyDataSetChanged();
         }
 
         class MessageViewHolder extends RecyclerView.ViewHolder {
