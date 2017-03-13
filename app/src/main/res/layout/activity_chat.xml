@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/chat_background"
-    tools:context="org.codepond.imdemo.ChatActivity">
+    tools:context="org.codepond.imdemo.chat.ChatActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/message_list"

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import org.codepond.imdemo.chat.ChatActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
