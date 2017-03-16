@@ -12,7 +12,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart() called");
-        mBound = XmppConnectionService.bindService(this, "test", "123456", this);
+        mBound = ChatService.bindService(this, "test", "123456", this);
     }
 
     @Override

@@ -16,7 +16,7 @@ import org.codepond.imdemo.BaseActivity;
 import org.codepond.imdemo.ChatMessage;
 import org.codepond.imdemo.MessagingService;
 import org.codepond.imdemo.R;
-import org.codepond.imdemo.XmppConnectionService;
+import org.codepond.imdemo.ChatService;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -71,7 +71,7 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        MessagingService messagingService = ((XmppConnectionService.LocalBinder)service).getService();
+        MessagingService messagingService = ((ChatService.LocalBinder)service).getService();
         mPresenter.setMessagingService(messagingService);
     }
 
