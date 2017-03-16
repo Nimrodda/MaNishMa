@@ -2,21 +2,16 @@ package org.codepond.imdemo;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
-import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -39,13 +34,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class XmppConnectionService extends Service implements MessagingService {
-    public class LocalBinder extends Binder {
-        public XmppConnectionService getService() {
-            return XmppConnectionService.this;
-        }
-    }
+import javax.inject.Inject;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
+
+public class XmppMessagingService implements MessagingService {
     private class MainHandler extends Handler {
         private MainHandler(Looper looper) {
             super(looper);
@@ -76,11 +69,11 @@ public class XmppConnectionService extends Service implements MessagingService {
                 else {
                     // TODO: Persist to local storage
 
-                    Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                    Intent intent = new Intent(mContext, ChatActivity.class);
                     intent.putExtra(ChatActivity.EXTRA_PARTICIPANT_JID, packet.getFrom());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    Notification notification = new NotificationCompat.Builder(getApplicationContext())
+                    PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    Notification notification = new NotificationCompat.Builder(mContext)
                             .setContentTitle(packet.getFrom())
                             .setContentText(packet.getBody())
                             .setSmallIcon(R.drawable.input_circle)
@@ -89,7 +82,7 @@ public class XmppConnectionService extends Service implements MessagingService {
                             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                             .setAutoCancel(true)
                             .build();
-                    NotificationManagerCompat.from(getApplicationContext()).notify(0, notification);
+                    NotificationManagerCompat.from(mContext).notify(0, notification);
                 }
             }
         }
@@ -112,32 +105,20 @@ public class XmppConnectionService extends Service implements MessagingService {
         }
     };
 
-    private static final String EXTRA_USERNAME = "extra_username";
-    private static final String EXTRA_PASSWORD = "extra_password";
-
     private static final String TAG = "XmppConnectionService";
-    private final IBinder mBinder = new LocalBinder();
     private Handler mWorkerHandler;
     private Handler mMainHandler;
     private HandlerThread mHandlerThread;
     private AbstractXMPPConnection mConnection;
-    private boolean mBound;
     private Queue<ChatMessage> mMessageQueue = new LinkedList<>();
     private Map<String, String> mChatThreads = new HashMap<>();
     private String mCurrentParticipant;
-    private OnMessageReceivedListener mOnMessageReceivedListener;
+    private MessagingService.OnMessageReceivedListener mOnMessageReceivedListener;
+    private boolean mBound;
+    private Context mContext;
 
-    public static boolean bindService(Context context, String username, String password, ServiceConnection serviceConnection) {
-        Intent intent = new Intent(context, XmppConnectionService.class);
-        intent.putExtra(EXTRA_USERNAME, username);
-        intent.putExtra(EXTRA_PASSWORD, password);
-        return context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(TAG, "onCreate() called");
+    @Inject public XmppMessagingService(Context context) {
+        mContext = context;
         mHandlerThread = new HandlerThread("XmppConnection");
         mHandlerThread.start();
         mWorkerHandler = new Handler(mHandlerThread.getLooper());
@@ -145,17 +126,7 @@ public class XmppConnectionService extends Service implements MessagingService {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy() called");
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind() called with: intent = [" + intent + "]");
-        String username = intent.getStringExtra(EXTRA_USERNAME);
-        String password = intent.getStringExtra(EXTRA_PASSWORD);
+    public void start(String username, String password) {
         XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                 .setUsernameAndPassword(username, password)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible)
@@ -167,19 +138,16 @@ public class XmppConnectionService extends Service implements MessagingService {
                 .build();
 
         mConnection = new XMPPTCPConnection(config);
-        registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        mContext.registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         mBound = true;
-        return mBinder;
     }
 
     @Override
-    public boolean onUnbind(Intent intent) {
-        Log.d(TAG, "onUnbind() called with: intent = [" + intent + "]");
+    public void stop() {
+        mBound = false;
         disconnect();
         mHandlerThread.quitSafely();
-        unregisterReceiver(mReceiver);
-        mBound = false;
-        return false;
+        mContext.unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -194,7 +162,7 @@ public class XmppConnectionService extends Service implements MessagingService {
     }
 
     @Override
-    public void setOnMessageReceivedListener(OnMessageReceivedListener listener) {
+    public void setOnMessageReceivedListener(MessagingService.OnMessageReceivedListener listener) {
         mOnMessageReceivedListener = listener;
     }
 
@@ -260,7 +228,7 @@ public class XmppConnectionService extends Service implements MessagingService {
     }
 
     private boolean isConnected() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(CONNECTIVITY_SERVICE);
         return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 
