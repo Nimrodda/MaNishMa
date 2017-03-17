@@ -19,7 +19,7 @@
         </activity>
         <activity android:name=".GoogleSignInActivity">
         </activity>
-        <activity android:name=".chat.ChatActivity" android:documentLaunchMode="always">
+        <activity android:name=".chat.ChatActivity">
         </activity>
 
         <service android:name=".MyFirebaseMessagingService">
