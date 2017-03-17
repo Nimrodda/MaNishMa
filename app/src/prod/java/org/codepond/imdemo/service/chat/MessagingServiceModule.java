@@ -6,10 +6,10 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class MessagingServiceModule {
+class MessagingServiceModule {
     private Context mContext;
 
-    public MessagingServiceModule(Context context) {
+    MessagingServiceModule(Context context) {
         mContext = context;
     }
 

@@ -40,7 +40,7 @@ import javax.inject.Inject;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
-public class XmppMessagingService implements MessagingServiceConnection {
+class XmppMessagingService implements MessagingServiceConnection {
     private class MainHandler extends Handler {
         private MainHandler(Looper looper) {
             super(looper);
@@ -119,7 +119,8 @@ public class XmppMessagingService implements MessagingServiceConnection {
     private boolean mBound;
     private Context mContext;
 
-    @Inject public XmppMessagingService(Context context) {
+    @Inject
+    XmppMessagingService(Context context) {
         mContext = context;
         mHandlerThread = new HandlerThread("XmppConnection");
         mHandlerThread.start();
