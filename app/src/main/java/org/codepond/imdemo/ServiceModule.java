@@ -1,14 +1,19 @@
 package org.codepond.imdemo;
 
-import javax.inject.Singleton;
+import android.content.Context;
 
-import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 
 @Module
-public abstract class ServiceModule {
+public class ServiceModule {
+    private Context mContext;
 
-    @Singleton
-    @Binds
-    abstract MessagingService provideMessagingService(XmppMessagingService xmppMessagingService);
+    public ServiceModule(Context context) {
+        mContext = context;
+    }
+
+    @Provides MessagingServiceConnection provideMessagingService() {
+        return new XmppMessagingService(mContext);
+    }
 }

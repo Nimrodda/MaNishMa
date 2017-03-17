@@ -38,7 +38,7 @@ import javax.inject.Inject;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
-public class XmppMessagingService implements MessagingService {
+public class XmppMessagingService implements MessagingServiceConnection {
     private class MainHandler extends Handler {
         private MainHandler(Looper looper) {
             super(looper);

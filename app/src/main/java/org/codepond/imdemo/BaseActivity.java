@@ -1,12 +1,10 @@
 package org.codepond.imdemo;
 
-import android.content.ComponentName;
 import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-public class BaseActivity extends AppCompatActivity implements ServiceConnection {
+public abstract class BaseActivity extends AppCompatActivity implements ServiceConnection {
     private static final String TAG = "BaseActivity";
     private boolean mBound;
 
@@ -25,13 +23,5 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
             Log.d(TAG, "onStop: unbindService");
             unbindService(this);
         }
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
     }
 }

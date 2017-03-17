@@ -1,7 +1,9 @@
 package org.codepond.imdemo;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -21,6 +23,16 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
 
     }
 }

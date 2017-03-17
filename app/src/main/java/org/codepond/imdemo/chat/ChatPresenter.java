@@ -1,5 +1,7 @@
 package org.codepond.imdemo.chat;
 
+import android.support.annotation.Nullable;
+
 import org.codepond.imdemo.ChatMessage;
 import org.codepond.imdemo.MessagingService;
 
@@ -14,23 +16,16 @@ class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessa
     private final ChatContracts.View mView;
     private final String mParticipantJid;
     private final List<ChatMessage> mMessages;
-    private final MessagingService mMessagingService;
+    @Nullable private MessagingService mMessagingService;
 
     @Inject
     ChatPresenter(ChatContracts.View view,
-                  MessagingService messagingService,
                   @Named("userJid") String userJid,
                   @Named("participantJid") String participantJid) {
         mView = view;
         mUserJid = userJid;
         mParticipantJid = participantJid;
-        mMessagingService = messagingService;
         mMessages = new ArrayList<>();
-    }
-
-    @Inject
-    void setup() {
-        mMessagingService.setCurrentParticipant(mParticipantJid);
     }
 
     @Override
@@ -46,7 +41,9 @@ class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessa
             mMessages.add(chatMessage);
             mView.notifyNewMessageAdded();
             mView.cleanUserInput();
-            mMessagingService.sendMessage(chatMessage);
+            if (mMessagingService != null) {
+                mMessagingService.sendMessage(chatMessage);
+            }
             // TODO: store message in DB
         }
     }
@@ -63,12 +60,19 @@ class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessa
     }
 
     @Override
-    public void start() {
+    public void start(MessagingService messagingService) {
+        if (messagingService == null) {
+            throw new NullPointerException("messagingService must not be null!");
+        }
+        mMessagingService = messagingService;
+        mMessagingService.setCurrentParticipant(mParticipantJid);
         mMessagingService.setOnMessageReceivedListener(this);
     }
 
     @Override
     public void stop() {
-        mMessagingService.setOnMessageReceivedListener(null);
+        if (mMessagingService != null) {
+            mMessagingService.setOnMessageReceivedListener(null);
+        }
     }
 }

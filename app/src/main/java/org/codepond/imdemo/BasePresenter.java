@@ -1,6 +1,6 @@
 package org.codepond.imdemo;
 
 public interface BasePresenter {
-    void start();
+    void start(MessagingService messagingService);
     void stop();
 }
