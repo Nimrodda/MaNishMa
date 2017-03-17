@@ -1,14 +1,13 @@
 package org.codepond.imdemo.chat;
 
+import org.codepond.imdemo.BasePresenter;
 import org.codepond.imdemo.ChatMessage;
-import org.codepond.imdemo.MessagingService;
 
 import java.util.List;
 
 interface ChatContracts {
-    interface Presenter {
+    interface Presenter extends BasePresenter {
         void sendMessage(String message);
-        void setMessagingService(MessagingService service);
         void loadMessages();
     }
 

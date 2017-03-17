@@ -8,4 +8,5 @@ import dagger.Component;
 @Component(modules = { AppModule.class, ServiceModule.class })
 public interface ServiceComponent {
     void inject(ChatService chatService);
+    MessagingService getMessagingService();
 }

@@ -7,7 +7,7 @@ import android.view.View;
 
 import org.codepond.imdemo.chat.ChatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
