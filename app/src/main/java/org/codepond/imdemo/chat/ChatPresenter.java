@@ -1,25 +1,36 @@
 package org.codepond.imdemo.chat;
 
-import android.support.annotation.Nullable;
-
 import org.codepond.imdemo.ChatMessage;
 import org.codepond.imdemo.MessagingService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessageReceivedListener {
     private final String mUserJid;
     private final ChatContracts.View mView;
     private final String mParticipantJid;
     private final List<ChatMessage> mMessages;
-    @Nullable private MessagingService mMessagingService;
+    private final MessagingService mMessagingService;
 
-    ChatPresenter(ChatContracts.View view, String userJid, String participantJid) {
+    @Inject
+    ChatPresenter(ChatContracts.View view,
+                  MessagingService messagingService,
+                  @Named("userJid") String userJid,
+                  @Named("participantJid") String participantJid) {
         mView = view;
         mUserJid = userJid;
         mParticipantJid = participantJid;
+        mMessagingService = messagingService;
         mMessages = new ArrayList<>();
+    }
+
+    @Inject
+    void setup() {
+        mMessagingService.setCurrentParticipant(mParticipantJid);
     }
 
     @Override
@@ -30,9 +41,6 @@ class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessa
 
     @Override
     public void sendMessage(String message) {
-        if (mMessagingService == null) {
-            throw new IllegalStateException("Cannot send message. mMessagingService is null!");
-        }
         if (message != null && message.length() > 0) {
             ChatMessage chatMessage = new ChatMessage(mUserJid, mParticipantJid, message, false, System.currentTimeMillis());
             mMessages.add(chatMessage);
@@ -44,15 +52,6 @@ class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessa
     }
 
     @Override
-    public void setMessagingService(MessagingService service) {
-        if (service != null) {
-            service.setCurrentParticipant(mParticipantJid);
-            service.setOnMessageReceivedListener(this);
-        }
-        mMessagingService = service;
-    }
-
-    @Override
     public void onMessageReceived(ChatMessage chatMessage) {
         // TODO: store message in DB
         mMessages.add(chatMessage);
@@ -61,5 +60,15 @@ class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessa
 
     List<ChatMessage> getMessages() {
         return mMessages;
+    }
+
+    @Override
+    public void start() {
+        mMessagingService.setOnMessageReceivedListener(this);
+    }
+
+    @Override
+    public void stop() {
+        mMessagingService.setOnMessageReceivedListener(null);
     }
 }

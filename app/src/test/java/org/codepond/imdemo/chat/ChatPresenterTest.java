@@ -2,7 +2,6 @@ package org.codepond.imdemo.chat;
 
 import org.codepond.imdemo.ChatMessage;
 import org.codepond.imdemo.MessagingService;
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +22,7 @@ public class ChatPresenterTest {
     public void setUp() throws Exception {
         mMockService = mock(MessagingService.class);
         mMockView = mock(ChatContracts.View.class);
-        mPresenter = new ChatPresenter(mMockView, "test@localhost", "test2@localhost");
+        mPresenter = new ChatPresenter(mMockView, mMockService, "test@localhost", "test2@localhost");
     }
 
     @After
@@ -32,7 +31,6 @@ public class ChatPresenterTest {
 
     @Test
     public void sendMessage_success() throws Exception {
-        mPresenter.setMessagingService(mMockService);
         mPresenter.sendMessage("blablabla");
         verify(mMockView).notifyNewMessageAdded();
         verify(mMockView).cleanUserInput();
@@ -41,27 +39,11 @@ public class ChatPresenterTest {
     }
 
     @Test
-    public void sendMessage_serviceNotSet_throws() throws Exception {
-        mException.expect(IllegalStateException.class);
-        mPresenter.sendMessage("blablabla");
-        verify(mMockView, never()).notifyNewMessageAdded();
-        verify(mMockService, never()).sendMessage(any(ChatMessage.class));
-        assertEquals(0, mPresenter.getMessages().size());
-    }
-
-    @Test
     public void sendMessage_withEmptyText_doesNothing() throws Exception {
-        mPresenter.setMessagingService(mMockService);
         mPresenter.sendMessage(null);
         verify(mMockView, never()).notifyNewMessageAdded();
         verify(mMockService, never()).sendMessage(any(ChatMessage.class));
         assertEquals(0, mPresenter.getMessages().size());
-    }
-
-    @Test
-    public void setMessagingService() throws Exception {
-        mPresenter.setMessagingService(mMockService);
-        verify(mMockService).setOnMessageReceivedListener(mPresenter);
     }
 
     @Test
