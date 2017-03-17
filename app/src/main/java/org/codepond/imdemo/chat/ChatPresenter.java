@@ -3,7 +3,7 @@ package org.codepond.imdemo.chat;
 import android.support.annotation.Nullable;
 
 import org.codepond.imdemo.ChatMessage;
-import org.codepond.imdemo.MessagingService;
+import org.codepond.imdemo.service.chat.MessagingService;
 
 import java.util.ArrayList;
 import java.util.List;

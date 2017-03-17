@@ -1,7 +1,7 @@
 package org.codepond.imdemo.chat;
 
 import org.codepond.imdemo.ChatMessage;
-import org.codepond.imdemo.MessagingService;
+import org.codepond.imdemo.service.chat.MessagingService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

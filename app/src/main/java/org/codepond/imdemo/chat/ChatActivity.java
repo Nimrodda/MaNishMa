@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import org.codepond.imdemo.BaseActivity;
 import org.codepond.imdemo.ChatMessage;
-import org.codepond.imdemo.ChatService;
-import org.codepond.imdemo.MessagingService;
+import org.codepond.imdemo.service.chat.ChatService;
+import org.codepond.imdemo.service.chat.MessagingService;
 import org.codepond.imdemo.R;
 
 import java.text.SimpleDateFormat;

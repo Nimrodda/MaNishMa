@@ -4,6 +4,8 @@ import android.content.ServiceConnection;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import org.codepond.imdemo.service.chat.ChatService;
+
 public abstract class BaseActivity extends AppCompatActivity implements ServiceConnection {
     private static final String TAG = "BaseActivity";
     private boolean mBound;

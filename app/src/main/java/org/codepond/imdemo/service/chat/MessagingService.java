@@ -1,4 +1,6 @@
-package org.codepond.imdemo;
+package org.codepond.imdemo.service.chat;
+
+import org.codepond.imdemo.ChatMessage;
 
 public interface MessagingService {
     interface OnMessageReceivedListener {
