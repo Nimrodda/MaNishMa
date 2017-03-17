@@ -1,6 +1,8 @@
 package org.codepond.imdemo.chat;
 
+import android.content.ComponentName;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +12,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.codepond.imdemo.App;
 import org.codepond.imdemo.BaseActivity;
 import org.codepond.imdemo.ChatMessage;
+import org.codepond.imdemo.ChatService;
+import org.codepond.imdemo.MessagingService;
 import org.codepond.imdemo.R;
 
 import java.text.SimpleDateFormat;
@@ -33,7 +36,6 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
         String participantJid = getIntent().getStringExtra(EXTRA_PARTICIPANT_JID);
         String userJid = "test@localhost";
         DaggerChatComponent.builder()
-                .serviceComponent(((App)getApplication()).getServiceComponent())
                 .chatModule(new ChatModule(participantJid, userJid, this)).build()
                 .inject(this);
         setContentView(R.layout.activity_chat);
@@ -55,18 +57,6 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.start();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.stop();
-    }
-
-    @Override
     public void showMessages(List<ChatMessage> chatMessages) {
         mAdapter.setMessages(chatMessages);
     }
@@ -80,6 +70,17 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
     @Override
     public void cleanUserInput() {
         mMessageText.setText("");
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        MessagingService messagingService = ((ChatService.LocalBinder)service).getService();
+        mPresenter.start(messagingService);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        mPresenter.stop();
     }
 
     private class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {

@@ -22,11 +22,13 @@ public class ChatPresenterTest {
     public void setUp() throws Exception {
         mMockService = mock(MessagingService.class);
         mMockView = mock(ChatContracts.View.class);
-        mPresenter = new ChatPresenter(mMockView, mMockService, "test@localhost", "test2@localhost");
+        mPresenter = new ChatPresenter(mMockView, "test@localhost", "test2@localhost");
+        mPresenter.start(mMockService);
     }
 
     @After
     public void tearDown() throws Exception {
+        mPresenter.stop();
     }
 
     @Test
