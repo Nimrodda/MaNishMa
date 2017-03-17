@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.ArgumentMatchers;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -23,16 +24,15 @@ public class ChatPresenterTest {
         mMockService = mock(MessagingService.class);
         mMockView = mock(ChatContracts.View.class);
         mPresenter = new ChatPresenter(mMockView, "test@localhost", "test2@localhost");
-        mPresenter.start(mMockService);
     }
 
     @After
     public void tearDown() throws Exception {
-        mPresenter.stop();
     }
 
     @Test
     public void sendMessage_success() throws Exception {
+        mPresenter.start(mMockService);
         mPresenter.sendMessage("blablabla");
         verify(mMockView).notifyNewMessageAdded();
         verify(mMockView).cleanUserInput();
@@ -42,6 +42,7 @@ public class ChatPresenterTest {
 
     @Test
     public void sendMessage_withEmptyText_doesNothing() throws Exception {
+        mPresenter.start(mMockService);
         mPresenter.sendMessage(null);
         verify(mMockView, never()).notifyNewMessageAdded();
         verify(mMockService, never()).sendMessage(any(ChatMessage.class));
@@ -54,5 +55,24 @@ public class ChatPresenterTest {
         mPresenter.onMessageReceived(chatMessage);
         verify(mMockView).notifyNewMessageAdded();
         assertTrue(mPresenter.getMessages().size() > 0);
+    }
+
+    @Test
+    public void loadMessages() throws Exception {
+        mPresenter.loadMessages();
+        verify(mMockView).showMessages(ArgumentMatchers.<ChatMessage>anyList());
+    }
+
+    @Test
+    public void start_nullService_throws() throws Exception {
+        mException.expect(NullPointerException.class);
+        mPresenter.start(null);
+    }
+
+    @Test
+    public void stop_unregisterListener() throws Exception {
+        mPresenter.start(mMockService);
+        mPresenter.stop();
+        verify(mMockService).setOnMessageReceivedListener(null);
     }
 }
