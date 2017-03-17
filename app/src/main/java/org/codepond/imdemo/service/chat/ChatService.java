@@ -1,4 +1,4 @@
-package org.codepond.imdemo;
+package org.codepond.imdemo.service.chat;
 
 import android.app.Service;
 import android.content.Context;
@@ -35,8 +35,8 @@ public class ChatService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        DaggerServiceComponent.builder()
-                .serviceModule(new ServiceModule(getApplicationContext()))
+        DaggerMessagingServiceComponent.builder()
+                .messagingServiceModule(new MessagingServiceModule(getApplicationContext()))
                 .build()
                 .inject(this);
     }

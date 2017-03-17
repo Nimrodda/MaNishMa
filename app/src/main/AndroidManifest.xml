@@ -32,7 +32,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".ChatService"
+            android:name=".service.chat.ChatService"
             android:exported="false"/>
     </application>
 

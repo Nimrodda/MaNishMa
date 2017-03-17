@@ -1,4 +1,4 @@
-package org.codepond.imdemo;
+package org.codepond.imdemo.service.chat;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -16,6 +16,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import org.codepond.imdemo.ChatMessage;
+import org.codepond.imdemo.R;
 import org.codepond.imdemo.chat.ChatActivity;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
