@@ -96,12 +96,12 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
         public void onBindViewHolder(MessageAdapter.MessageViewHolder vh, int position) {
             ChatMessage chatMessage = mMessages.get(position);
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) vh.container.getLayoutParams();
-            if (chatMessage.incomingMessage) {
-                if (isPreviousAuthorSame(position, chatMessage.from)) {
+            if (chatMessage.getIncomingMessage()) {
+                if (isPreviousAuthorSame(position, chatMessage.getFrom())) {
                     vh.container.setBackgroundResource(R.drawable.chat_bubble_incoming_ext);
                 }
                 else {
-                    vh.author.setText(chatMessage.from);
+                    vh.author.setText(chatMessage.getFrom());
                     vh.author.setVisibility(android.view.View.VISIBLE);
                     vh.container.setBackgroundResource(R.drawable.chat_bubble_incoming);
 
@@ -109,7 +109,7 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
                 lp.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
             }
             else {
-                if (isPreviousAuthorSame(position, chatMessage.from)) {
+                if (isPreviousAuthorSame(position, chatMessage.getFrom())) {
                     vh.container.setBackgroundResource(R.drawable.chat_bubble_outgoing_ext);
                 }
                 else {
@@ -118,12 +118,12 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
                 lp.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
             }
             vh.container.setLayoutParams(lp);
-            vh.messageItem.setText(chatMessage.messageText);
-            vh.timestamp.setText(SimpleDateFormat.getInstance().format(chatMessage.timestamp));
+            vh.messageItem.setText(chatMessage.getMessageText());
+            vh.timestamp.setText(SimpleDateFormat.getInstance().format(chatMessage.getTimestamp()));
         }
 
         private boolean isPreviousAuthorSame(int position, String displayName) {
-            return position > 0 && mMessages.get(position - 1).from.equals(displayName);
+            return position > 0 && mMessages.get(position - 1).getFrom().equals(displayName);
         }
 
         @Override
