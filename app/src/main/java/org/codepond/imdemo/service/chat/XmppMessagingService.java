@@ -211,14 +211,14 @@ public class XmppMessagingService implements MessagingServiceConnection {
                         ChatMessage chatMessage = mMessageQueue.peek();
                         ChatManager chatManager = ChatManager.getInstanceFor(mConnection);
                         Chat chat;
-                        if (mChatThreads.containsKey(chatMessage.to)) {
-                            chat = chatManager.getThreadChat(mChatThreads.get(chatMessage.to));
+                        if (mChatThreads.containsKey(chatMessage.getTo())) {
+                            chat = chatManager.getThreadChat(mChatThreads.get(chatMessage.getTo()));
                         }
                         else {
-                            chat = chatManager.createChat(chatMessage.to, mChatMessageListener);
+                            chat = chatManager.createChat(chatMessage.getTo(), mChatMessageListener);
                         }
                         Log.v(TAG, "Sending message");
-                        chat.sendMessage(chatMessage.messageText);
+                        chat.sendMessage(chatMessage.getMessageText());
                         mMessageQueue.poll();
                     } catch (SmackException.NotConnectedException e) {
                         Log.v(TAG, "Failed to send chat message, not connected");
