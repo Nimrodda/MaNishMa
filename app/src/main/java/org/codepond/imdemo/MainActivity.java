@@ -19,7 +19,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                intent.putExtra(ChatActivity.EXTRA_PARTICIPANT_JID, "user1@localhost/rLMACndayan");
+                intent.putExtra(ChatActivity.Companion.getEXTRA_PARTICIPANT_JID(), "user1@localhost/rLMACndayan");
                 startActivity(intent);
             }
         });

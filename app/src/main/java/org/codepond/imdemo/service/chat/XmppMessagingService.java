@@ -72,7 +72,7 @@ public class XmppMessagingService implements MessagingServiceConnection {
                     // TODO: Persist to local storage
 
                     Intent intent = new Intent(mContext, ChatActivity.class);
-                    intent.putExtra(ChatActivity.EXTRA_PARTICIPANT_JID, packet.getFrom());
+                    intent.putExtra(ChatActivity.Companion.getEXTRA_PARTICIPANT_JID(), packet.getFrom());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     Notification notification = new NotificationCompat.Builder(mContext)

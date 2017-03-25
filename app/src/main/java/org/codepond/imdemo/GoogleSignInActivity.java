@@ -94,7 +94,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements
                     data.put("groupId", "default");
                     MessageUtil.sendUpstreamMessage(MessageUtil.ACTION_REGISTER, data);
                     Intent intent = new Intent(GoogleSignInActivity.this, ChatActivity.class);
-                    intent.putExtra(ChatActivity.EXTRA_PARTICIPANT_JID, "user1@localhost/rLMACndayan");
+                    intent.putExtra(ChatActivity.Companion.getEXTRA_PARTICIPANT_JID(), "user1@localhost/rLMACndayan");
                     startActivity(intent);
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
