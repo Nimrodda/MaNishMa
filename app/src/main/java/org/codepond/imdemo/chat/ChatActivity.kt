@@ -23,6 +23,7 @@ import javax.inject.Inject
 
 class ChatActivity : BaseActivity(), ChatContracts.View {
     companion object {
+        @JvmStatic
         val EXTRA_PARTICIPANT_JID = "extra_participant_jid"
     }
     private var mAdapter: MessageAdapter? = null
