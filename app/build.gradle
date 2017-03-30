@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 25
@@ -36,9 +35,10 @@ dependencies {
     compile "com.google.android.gms:play-services-auth:$playServicesVersion"
 
     // Dagger dependencies
-    apt "com.google.dagger:dagger-compiler:2.10-rc4"
-    compile 'com.google.dagger:dagger:2.10-rc4'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
+    compile "com.google.dagger:dagger-android-support:$daggerVersion"
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.7.15'
@@ -63,6 +63,7 @@ dependencies {
 
 configurations {
     all*.exclude group: 'xpp3', module: 'xpp3'
+    all*.exclude module: 'jsr305'
 }
 
 apply plugin: 'com.google.gms.google-services'
