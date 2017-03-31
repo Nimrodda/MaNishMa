@@ -39,7 +39,7 @@ class ChatActivityTest {
         val chatMessage = ChatMessage("user2@localhost/rLMACndayan", "user1@localhost/rLMACndayan", messageText, true, System.currentTimeMillis())
         val activity = mActivityTestRule.activity
 
-        mUiThreadTestRule.runOnUiThread { activity.mPresenter.onMessageReceived(chatMessage) }
+        mUiThreadTestRule.runOnUiThread { activity.mChatViewModel.onMessageReceived(chatMessage) }
 
         ChatRobot()
                 .receiveMessage(messageText)

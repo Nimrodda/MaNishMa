@@ -1,47 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/chat_background"
-    tools:context="org.codepond.imdemo.chat.ChatActivity">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/message_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="model" type="org.codepond.imdemo.chat.ChatViewModel"/>
+    </data>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/message_text"
-            android:layout_width="0dp"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/chat_background"
+        tools:context="org.codepond.imdemo.chat.ChatActivity">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/message_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:inputType="textMultiLine"
-            android:hint="@string/type_a_message"
-            android:maxLength="100"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:scrollbars="vertical"
-            android:background="@drawable/input_chat_bubble"/>
-        <ImageButton
-            android:id="@+id/button_send"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:scaleType="center"
-            android:layout_margin="8dp"
-            android:src="@drawable/input_send"
-            android:background="@drawable/input_circle"/>
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/message_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:inputType="textMultiLine"
+                android:hint="@string/type_a_message"
+                android:maxLength="100"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:scrollbars="vertical"
+                android:text="@={model.messageText}"
+                android:background="@drawable/input_chat_bubble"/>
+            <ImageButton
+                android:id="@+id/button_send"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="center"
+                android:layout_margin="8dp"
+                android:onClick="@{() -> model.clickSend()}"
+                android:src="@drawable/input_send"
+                android:background="@drawable/input_circle"/>
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</layout>
