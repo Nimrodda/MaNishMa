@@ -1,6 +1,7 @@
 package org.codepond.imdemo.chat;
 
 import android.content.ComponentName;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -8,37 +9,33 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.codepond.imdemo.BaseActivity;
 import org.codepond.imdemo.ChatMessage;
+import org.codepond.imdemo.R;
+import org.codepond.imdemo.databinding.ActivityChatBinding;
 import org.codepond.imdemo.service.chat.ChatService;
 import org.codepond.imdemo.service.chat.MessagingService;
-import org.codepond.imdemo.R;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import javax.inject.Inject;
-
-public class ChatActivity extends BaseActivity implements ChatContracts.View {
+public class ChatActivity extends BaseActivity {
     public static final String EXTRA_PARTICIPANT_JID = "extra_participant_jid";
     private MessageAdapter mAdapter;
-    private EditText mMessageText;
     private RecyclerView mRecyclerView;
-    @Inject ChatPresenter mPresenter;
+    ChatViewModel mChatViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String participantJid = getIntent().getStringExtra(EXTRA_PARTICIPANT_JID);
         String userJid = "test@localhost";
-        DaggerChatComponent.builder()
-                .chatModule(new ChatModule(participantJid, userJid, this)).build()
-                .inject(this);
-        setContentView(R.layout.activity_chat);
+        mChatViewModel = new ChatViewModel(userJid, participantJid);
+        ActivityChatBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
+        binding.setModel(mChatViewModel);
         mRecyclerView = (RecyclerView) findViewById(R.id.message_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         layoutManager.setStackFromEnd(true);
@@ -46,41 +43,18 @@ public class ChatActivity extends BaseActivity implements ChatContracts.View {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new MessageAdapter();
         mRecyclerView.setAdapter(mAdapter);
-        mMessageText = (EditText) findViewById(R.id.message_text);
-        findViewById(R.id.button_send).setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View view) {
-                mPresenter.sendMessage(mMessageText.getText().toString());
-            }
-        });
-        mPresenter.loadMessages();
-    }
-
-    @Override
-    public void showMessages(List<ChatMessage> chatMessages) {
-        mAdapter.setMessages(chatMessages);
-    }
-
-    @Override
-    public void notifyNewMessageAdded() {
-        mAdapter.notifyNewMessageAdded();
-        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount());
-    }
-
-    @Override
-    public void cleanUserInput() {
-        mMessageText.setText("");
+        mChatViewModel.loadMessages();
     }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         MessagingService messagingService = ((ChatService.LocalBinder)service).getService();
-        mPresenter.start(messagingService);
+        mChatViewModel.start(messagingService);
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        mPresenter.stop();
+        mChatViewModel.stop();
     }
 
     private class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {

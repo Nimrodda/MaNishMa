@@ -1,5 +1,7 @@
 package org.codepond.imdemo.chat;
 
+import android.databinding.Observable;
+import android.databinding.ObservableField;
 import android.support.annotation.Nullable;
 
 import org.codepond.imdemo.ChatMessage;
@@ -11,36 +13,29 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessageReceivedListener {
+public class ChatViewModel implements MessagingService.OnMessageReceivedListener {
+    public ObservableField<String> messageText = new ObservableField<>();
     private final String mUserJid;
-    private final ChatContracts.View mView;
     private final String mParticipantJid;
     private final List<ChatMessage> mMessages;
     @Nullable private MessagingService mMessagingService;
 
-    @Inject
-    ChatPresenter(ChatContracts.View view,
-                  @Named("userJid") String userJid,
+    public ChatViewModel(@Named("userJid") String userJid,
                   @Named("participantJid") String participantJid) {
-        mView = view;
         mUserJid = userJid;
         mParticipantJid = participantJid;
         mMessages = new ArrayList<>();
     }
 
-    @Override
     public void loadMessages() {
         // TODO: Load message history from DB
-        mView.showMessages(mMessages);
     }
 
-    @Override
-    public void sendMessage(String message) {
-        if (message != null && message.length() > 0) {
-            ChatMessage chatMessage = new ChatMessage(mUserJid, mParticipantJid, message, false, System.currentTimeMillis());
+    public void clickSend() {
+        if (messageText.get() != null && messageText.get().length() > 0) {
+            ChatMessage chatMessage = new ChatMessage(mUserJid, mParticipantJid, messageText.get(), false, System.currentTimeMillis());
             mMessages.add(chatMessage);
-            mView.notifyNewMessageAdded();
-            mView.cleanUserInput();
+            messageText.set("");
             if (mMessagingService != null) {
                 mMessagingService.sendMessage(chatMessage);
             }
@@ -52,15 +47,13 @@ class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessa
     public void onMessageReceived(ChatMessage chatMessage) {
         // TODO: store message in DB
         mMessages.add(chatMessage);
-        mView.notifyNewMessageAdded();
     }
 
     List<ChatMessage> getMessages() {
         return mMessages;
     }
 
-    @Override
-    public void start(MessagingService messagingService) {
+    void start(MessagingService messagingService) {
         if (messagingService == null) {
             throw new NullPointerException("messagingService must not be null!");
         }
@@ -69,8 +62,7 @@ class ChatPresenter implements ChatContracts.Presenter, MessagingService.OnMessa
         mMessagingService.setOnMessageReceivedListener(this);
     }
 
-    @Override
-    public void stop() {
+    void stop() {
         if (mMessagingService != null) {
             mMessagingService.setOnMessageReceivedListener(null);
         }
