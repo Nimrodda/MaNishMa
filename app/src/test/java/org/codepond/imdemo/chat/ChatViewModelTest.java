@@ -1,6 +1,7 @@
 package org.codepond.imdemo.chat;
 
 import org.codepond.imdemo.ChatMessage;
+import org.codepond.imdemo.R;
 import org.codepond.imdemo.service.chat.MessagingService;
 import org.junit.After;
 import org.junit.Before;
@@ -69,5 +70,67 @@ public class ChatViewModelTest {
         mChatViewModel.start(mMockService);
         mChatViewModel.stop();
         verify(mMockService).setOnMessageReceivedListener(null);
+    }
+
+    @Test
+    public void isAuthorVisible_incomingTrueSamePreviousAuthor_returnsFalse() throws Exception {
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", "bla", true, 0), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("George", "Foo", "bla", true, 0), 1);
+        mChatViewModel.getMessages().add(messageViewModel);
+        assertFalse(mChatViewModel.isAuthorVisible(messageViewModel));
+    }
+
+    @Test
+    public void isAuthorVisible_incomingTrueDifferentPreviousAuthor_returnsTrue() throws Exception {
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", "bla", true, 0), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 1);
+        mChatViewModel.getMessages().add(messageViewModel);
+        assertTrue(mChatViewModel.isAuthorVisible(messageViewModel));
+    }
+
+    @Test
+    public void isAuthorVisible_localMessage_returnsFalse() throws Exception {
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", "bla", true, 0), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", false, 0), 1);
+        mChatViewModel.getMessages().add(messageViewModel);
+        assertFalse(mChatViewModel.isAuthorVisible(messageViewModel));
+    }
+
+    @Test
+    public void isAuthorVisible_incomingTruePreviousMessageLocal_returnsTrue() throws Exception {
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", "bla", false, 0), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 1);
+        mChatViewModel.getMessages().add(messageViewModel);
+        assertTrue(mChatViewModel.isAuthorVisible(messageViewModel));
+    }
+
+    @Test
+    public void getBackground_firstLocalMessage_returnsChatBubbleOutgoing() throws Exception {
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", false, 0), 0);
+        mChatViewModel.getMessages().add(messageViewModel);
+        assertEquals(R.drawable.chat_bubble_outgoing, mChatViewModel.getBackground(messageViewModel));
+    }
+
+    @Test
+    public void getBackground_secondLocalMessage_returnsChatBubbleOutgoingExt() throws Exception {
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("John", "Foo", "bla", false, 0), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", false, 0), 1);
+        mChatViewModel.getMessages().add(messageViewModel);
+        assertEquals(R.drawable.chat_bubble_outgoing_ext, mChatViewModel.getBackground(messageViewModel));
+    }
+
+    @Test
+    public void getBackground_firstRemoteMessage_returnsChatBubbleIncoming() throws Exception {
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 0);
+        mChatViewModel.getMessages().add(messageViewModel);
+        assertEquals(R.drawable.chat_bubble_incoming, mChatViewModel.getBackground(messageViewModel));
+    }
+
+    @Test
+    public void getBackground_secondRemoteMessage_returnsChatBubbleIncomingExt() throws Exception {
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 1);
+        mChatViewModel.getMessages().add(messageViewModel);
+        assertEquals(R.drawable.chat_bubble_incoming_ext, mChatViewModel.getBackground(messageViewModel));
     }
 }
