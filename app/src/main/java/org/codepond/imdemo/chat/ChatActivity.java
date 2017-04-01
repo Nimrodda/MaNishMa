@@ -25,8 +25,6 @@ import org.codepond.imdemo.service.chat.MessagingService;
 
 public class ChatActivity extends BaseActivity {
     public static final String EXTRA_PARTICIPANT_JID = "extra_participant_jid";
-    private MessageAdapter mAdapter;
-    private RecyclerView mRecyclerView;
     ChatViewModel mChatViewModel;
 
     @Override
@@ -37,13 +35,11 @@ public class ChatActivity extends BaseActivity {
         mChatViewModel = new ChatViewModel(userJid, participantJid);
         ActivityChatBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
         binding.setModel(mChatViewModel);
-        mRecyclerView = (RecyclerView) findViewById(R.id.message_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         layoutManager.setStackFromEnd(true);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new MessageAdapter(mChatViewModel.getMessages());
-        mRecyclerView.setAdapter(mAdapter);
+        binding.messageList.setLayoutManager(layoutManager);
+        binding.messageList.setItemAnimator(new DefaultItemAnimator());
+        binding.messageList.setAdapter(new MessageAdapter(mChatViewModel.getMessages()));
         mChatViewModel.loadMessages();
     }
 
