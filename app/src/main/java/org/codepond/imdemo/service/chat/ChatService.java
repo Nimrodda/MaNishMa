@@ -11,6 +11,8 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjection;
+
 public class ChatService extends Service {
     public class LocalBinder extends Binder {
         public MessagingService getService() {
@@ -35,10 +37,7 @@ public class ChatService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        DaggerMessagingServiceComponent.builder()
-                .messagingServiceModule(new MessagingServiceModule(getApplicationContext()))
-                .build()
-                .inject(this);
+        AndroidInjection.inject(this);
     }
 
     @Nullable
