@@ -20,8 +20,8 @@ buildscript {
 
 allprojects {
     ext {
-        supportLibVersion = "25.2.0"
-        playServicesVersion = "10.2.0"
+        supportLibVersion = "25.3.1"
+        playServicesVersion = "10.2.1"
         daggerVersion = "2.10"
     }
     repositories {
