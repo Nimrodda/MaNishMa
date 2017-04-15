@@ -52,6 +52,7 @@ public class ChatActivity extends BaseActivity {
 
     private class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
         @NonNull private ObservableArrayList<MessageViewModel> mMessages;
+        private RecyclerView mRecyclerView;
 
         MessageAdapter(@NonNull ObservableArrayList<MessageViewModel> messages) {
             mMessages = messages;
@@ -77,6 +78,7 @@ public class ChatActivity extends BaseActivity {
         @Override
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
+            mRecyclerView = recyclerView;
             mMessages.addOnListChangedCallback(mOnListChangedCallback);
         }
 
@@ -101,6 +103,7 @@ public class ChatActivity extends BaseActivity {
             public void onItemRangeInserted(ObservableList observableList, int i, int i1) {
                 final int newMessagePosition = mMessages.size();
                 notifyItemInserted(newMessagePosition);
+                mRecyclerView.smoothScrollToPosition(getItemCount());
             }
 
             @Override
