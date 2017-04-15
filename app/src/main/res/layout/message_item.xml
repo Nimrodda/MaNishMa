@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            app:remote="@{message.incoming}"
+            app:remote="@{chat.isIncoming(message)}"
             android:background="@{context.getDrawable(chat.getBackground(message))}"
             android:orientation="vertical">
             <TextView

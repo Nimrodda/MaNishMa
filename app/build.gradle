@@ -39,6 +39,7 @@ dependencies {
 
     compile "com.google.firebase:firebase-messaging:$playServicesVersion"
     compile "com.google.firebase:firebase-auth:$playServicesVersion"
+    compile "com.google.firebase:firebase-database:$playServicesVersion"
     compile "com.google.android.gms:play-services-auth:$playServicesVersion"
 
     // Dagger dependencies
@@ -59,7 +60,7 @@ dependencies {
     androidTestCompile "com.google.dexmaker:dexmaker-mockito:1.2"
 
     androidTestCompile "com.android.support:support-annotations:$supportLibVersion"
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2') {
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
         exclude module: 'recyclerview-v7'
         exclude module: 'design'
         exclude module: 'support-v4'

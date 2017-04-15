@@ -25,7 +25,7 @@ public class ChatService extends Service {
     private static final String EXTRA_PASSWORD = "extra_password";
 
     private final IBinder mBinder = new LocalBinder();
-    @Inject MessagingServiceConnection mMessagingServiceConnection;
+    MessagingServiceConnection mMessagingServiceConnection;
 
     public static boolean bindService(Context context, String username, String password, ServiceConnection serviceConnection) {
         Intent intent = new Intent(context, ChatService.class);
@@ -37,7 +37,7 @@ public class ChatService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        AndroidInjection.inject(this);
+//        AndroidInjection.inject(this);
     }
 
     @Nullable

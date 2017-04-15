@@ -1,12 +1,10 @@
 package org.codepond.imdemo.chat;
 
-import android.content.ComponentName;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,19 +18,17 @@ import org.codepond.imdemo.BaseActivity;
 import org.codepond.imdemo.R;
 import org.codepond.imdemo.databinding.ActivityChatBinding;
 import org.codepond.imdemo.databinding.MessageItemBinding;
-import org.codepond.imdemo.service.chat.ChatService;
-import org.codepond.imdemo.service.chat.MessagingService;
+import org.codepond.imdemo.service.chat.FirebaseMessagingService;
 
 public class ChatActivity extends BaseActivity {
-    public static final String EXTRA_PARTICIPANT_JID = "extra_participant_jid";
+    public static final String USER_ID = "extra_participant_jid";
     ChatViewModel mChatViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String participantJid = getIntent().getStringExtra(EXTRA_PARTICIPANT_JID);
-        String userJid = "test@localhost";
-        mChatViewModel = new ChatViewModel(userJid, participantJid);
+        String userId = getIntent().getStringExtra(USER_ID);
+        mChatViewModel = new ChatViewModel(userId, "", new FirebaseMessagingService());
         ActivityChatBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_chat);
         binding.setModel(mChatViewModel);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -41,17 +37,6 @@ public class ChatActivity extends BaseActivity {
         binding.messageList.setItemAnimator(new DefaultItemAnimator());
         binding.messageList.setAdapter(new MessageAdapter(mChatViewModel.getMessages()));
         mChatViewModel.loadMessages();
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-        MessagingService messagingService = ((ChatService.LocalBinder)service).getService();
-        mChatViewModel.start(messagingService);
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-        mChatViewModel.stop();
     }
 
     @BindingAdapter("remote")

@@ -1,3 +1,4 @@
 package org.codepond.imdemo
 
-data class ChatMessage(var from: String, var to: String, var messageText: String, var incomingMessage: Boolean, var timestamp: Long)
+data class ChatMessage(var from: String = "",
+                       var text: String = "", var createdDate: Any? = null)

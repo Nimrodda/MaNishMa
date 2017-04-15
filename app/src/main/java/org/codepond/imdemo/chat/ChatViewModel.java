@@ -2,51 +2,48 @@ package org.codepond.imdemo.chat;
 
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableField;
-import android.support.annotation.Nullable;
 
 import org.codepond.imdemo.ChatMessage;
 import org.codepond.imdemo.R;
 import org.codepond.imdemo.service.chat.MessagingService;
 
-import javax.inject.Named;
-
 public class ChatViewModel implements MessagingService.OnMessageReceivedListener {
     public ObservableField<String> messageText = new ObservableField<>();
-    private final String mUserJid;
-    private final String mParticipantJid;
+    private final String mUserId;
+    private final String mChatId;
     private final ObservableArrayList<MessageViewModel> mMessages = new ObservableArrayList<>();
-    @Nullable private MessagingService mMessagingService;
+    private final MessagingService mMessagingService;
 
-    public ChatViewModel(@Named("userJid") String userJid,
-                  @Named("participantJid") String participantJid) {
-        mUserJid = userJid;
-        mParticipantJid = participantJid;
+    public ChatViewModel(String userJid,
+                        String participantJid,
+                        MessagingService messagingService) {
+        mUserId = userJid;
+        mChatId = participantJid;
+        mMessagingService = messagingService;
+        mMessagingService.setOnMessageReceivedListener(this);
         messageText.set("");
     }
 
     void loadMessages() {
-        // TODO: Load message history from DB
     }
 
     public void clickSend() {
         if (messageText.get() != null && messageText.get().length() > 0) {
-            ChatMessage chatMessage = new ChatMessage(mUserJid, mParticipantJid, messageText.get(), false, System.currentTimeMillis());
-            mMessages.add(new MessageViewModel(chatMessage, mMessages.size()));
+            ChatMessage chatMessage = new ChatMessage(mUserId, messageText.get(), null);
             messageText.set("");
             if (mMessagingService != null) {
                 mMessagingService.sendMessage(chatMessage);
             }
-            // TODO: store message in DB
         }
     }
 
     public boolean isAuthorVisible(MessageViewModel model) {
-        return model.getIncoming()
+        return isIncoming(model)
                 && !isPreviousAuthorSame(model);
     }
 
     public int getBackground(MessageViewModel model) {
-        if (model.getIncoming()) {
+        if (isIncoming(model)) {
             if (isPreviousAuthorSame(model)) {
                 return R.drawable.chat_bubble_incoming_ext;
             }
@@ -69,28 +66,16 @@ public class ChatViewModel implements MessagingService.OnMessageReceivedListener
         return position > 0 && mMessages.get(position - 1).getAuthor().equals(model.getAuthor());
     }
 
+    public boolean isIncoming(MessageViewModel model) {
+        return !mUserId.equals(model.getAuthor());
+    }
+
     @Override
     public void onMessageReceived(ChatMessage chatMessage) {
-        // TODO: store message in DB
         mMessages.add(new MessageViewModel(chatMessage, mMessages.size()));
     }
 
     ObservableArrayList<MessageViewModel> getMessages() {
         return mMessages;
-    }
-
-    void start(MessagingService messagingService) {
-        if (messagingService == null) {
-            throw new NullPointerException("messagingService must not be null!");
-        }
-        mMessagingService = messagingService;
-        mMessagingService.setCurrentParticipant(mParticipantJid);
-        mMessagingService.setOnMessageReceivedListener(this);
-    }
-
-    void stop() {
-        if (mMessagingService != null) {
-            mMessagingService.setOnMessageReceivedListener(null);
-        }
     }
 }

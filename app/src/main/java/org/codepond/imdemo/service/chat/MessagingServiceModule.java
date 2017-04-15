@@ -5,5 +5,5 @@ import dagger.Module;
 
 @Module
 public abstract class MessagingServiceModule {
-    @Binds public abstract MessagingServiceConnection provideMessagingService(XmppMessagingService xmppMessagingService);
+    @Binds public abstract MessagingService provideMessagingService(FirebaseMessagingService firebaseMessagingService);
 }

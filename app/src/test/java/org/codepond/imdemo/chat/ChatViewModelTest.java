@@ -21,7 +21,7 @@ public class ChatViewModelTest {
     @Before
     public void setUp() throws Exception {
         mMockService = mock(MessagingService.class);
-        mChatViewModel = new ChatViewModel("test@localhost", "test2@localhost");
+        mChatViewModel = new ChatViewModel("test@localhost", "test2@localhost", mMockService);
     }
 
     @After
@@ -30,7 +30,6 @@ public class ChatViewModelTest {
 
     @Test
     public void sendMessage_success() throws Exception {
-        mChatViewModel.start(mMockService);
         mChatViewModel.messageText.set("Hello");
         mChatViewModel.clickSend();
         assertEquals("", mChatViewModel.messageText.get());
@@ -40,7 +39,6 @@ public class ChatViewModelTest {
 
     @Test
     public void sendMessage_withEmptyText_doesNothing() throws Exception {
-        mChatViewModel.start(mMockService);
         mChatViewModel.clickSend();
         verify(mMockService, never()).sendMessage(any(ChatMessage.class));
         assertEquals(0, mChatViewModel.getMessages().size());
@@ -48,7 +46,7 @@ public class ChatViewModelTest {
 
     @Test
     public void onMessageReceived() throws Exception {
-        ChatMessage chatMessage = new ChatMessage("ab", "ba", "blabla", false, 12312312);
+        ChatMessage chatMessage = new ChatMessage("ab", "ba", null);
         mChatViewModel.onMessageReceived(chatMessage);
         assertTrue(mChatViewModel.getMessages().size() > 0);
     }
@@ -62,74 +60,71 @@ public class ChatViewModelTest {
     @Test
     public void start_nullService_throws() throws Exception {
         mException.expect(NullPointerException.class);
-        mChatViewModel.start(null);
     }
 
     @Test
     public void stop_unregisterListener() throws Exception {
-        mChatViewModel.start(mMockService);
-        mChatViewModel.stop();
         verify(mMockService).setOnMessageReceivedListener(null);
     }
 
     @Test
     public void isAuthorVisible_incomingTrueSamePreviousAuthor_returnsFalse() throws Exception {
-        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", "bla", true, 0), 0));
-        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("George", "Foo", "bla", true, 0), 1);
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", null), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("George", "Foo", null), 1);
         mChatViewModel.getMessages().add(messageViewModel);
         assertFalse(mChatViewModel.isAuthorVisible(messageViewModel));
     }
 
     @Test
     public void isAuthorVisible_incomingTrueDifferentPreviousAuthor_returnsTrue() throws Exception {
-        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", "bla", true, 0), 0));
-        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 1);
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", null), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", null), 1);
         mChatViewModel.getMessages().add(messageViewModel);
         assertTrue(mChatViewModel.isAuthorVisible(messageViewModel));
     }
 
     @Test
     public void isAuthorVisible_localMessage_returnsFalse() throws Exception {
-        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", "bla", true, 0), 0));
-        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", false, 0), 1);
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", null), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", null), 1);
         mChatViewModel.getMessages().add(messageViewModel);
         assertFalse(mChatViewModel.isAuthorVisible(messageViewModel));
     }
 
     @Test
     public void isAuthorVisible_incomingTruePreviousMessageLocal_returnsTrue() throws Exception {
-        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", "bla", false, 0), 0));
-        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 1);
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("George", "Foo", null), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", null), 1);
         mChatViewModel.getMessages().add(messageViewModel);
         assertTrue(mChatViewModel.isAuthorVisible(messageViewModel));
     }
 
     @Test
     public void getBackground_firstLocalMessage_returnsChatBubbleOutgoing() throws Exception {
-        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", false, 0), 0);
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", null), 0);
         mChatViewModel.getMessages().add(messageViewModel);
         assertEquals(R.drawable.chat_bubble_outgoing, mChatViewModel.getBackground(messageViewModel));
     }
 
     @Test
     public void getBackground_secondLocalMessage_returnsChatBubbleOutgoingExt() throws Exception {
-        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("John", "Foo", "bla", false, 0), 0));
-        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", false, 0), 1);
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("John", "Foo", null), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", null), 1);
         mChatViewModel.getMessages().add(messageViewModel);
         assertEquals(R.drawable.chat_bubble_outgoing_ext, mChatViewModel.getBackground(messageViewModel));
     }
 
     @Test
     public void getBackground_firstRemoteMessage_returnsChatBubbleIncoming() throws Exception {
-        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 0);
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", null), 0);
         mChatViewModel.getMessages().add(messageViewModel);
         assertEquals(R.drawable.chat_bubble_incoming, mChatViewModel.getBackground(messageViewModel));
     }
 
     @Test
     public void getBackground_secondRemoteMessage_returnsChatBubbleIncomingExt() throws Exception {
-        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 0));
-        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", "bla", true, 0), 1);
+        mChatViewModel.getMessages().add(new MessageViewModel(new ChatMessage("John", "Foo", null), 0));
+        MessageViewModel messageViewModel = new MessageViewModel(new ChatMessage("John", "Foo", null), 1);
         mChatViewModel.getMessages().add(messageViewModel);
         assertEquals(R.drawable.chat_bubble_incoming_ext, mChatViewModel.getBackground(messageViewModel));
     }
