@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View"/>
         <import type="android.widget.RelativeLayout"/>
@@ -12,6 +13,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        tools:background="@color/chat_background"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:paddingTop="4dp"
@@ -21,6 +23,8 @@
             android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            tools:text="Author"
+            tools:visibility="visible"
             android:text="@{message.author}"
             android:visibility="@{chat.isAuthorVisible(message) ? View.VISIBLE : View.GONE}"/>
         <LinearLayout
@@ -31,6 +35,8 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             app:remote="@{chat.isIncoming(message)}"
+            tools:background="@drawable/chat_bubble_incoming"
+            tools:layout_alignParentStart="true"
             android:background="@{context.getDrawable(chat.getBackground(message))}"
             android:orientation="vertical">
             <TextView
@@ -40,11 +46,13 @@
                 android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:padding="4dp"
+                tools:text="Message text here"
                 android:text="@{message.text}"
                 android:layout_margin="4dp">
             </TextView>
             <TextView
                 android:id="@+id/timestamp"
+                tools:text="10:00"
                 android:text="@{message.timestamp}"
                 android:textColor="@color/timestamp"
                 android:layout_width="wrap_content"
