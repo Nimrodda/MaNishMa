@@ -4,6 +4,7 @@ import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,10 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import org.codepond.imdemo.BR;
 import org.codepond.imdemo.BaseActivity;
 import org.codepond.imdemo.R;
 import org.codepond.imdemo.databinding.ActivityChatBinding;
-import org.codepond.imdemo.databinding.MessageItemBinding;
 import org.codepond.imdemo.service.chat.FirebaseMessagingService;
 
 public class ChatActivity extends BaseActivity {
@@ -39,10 +40,10 @@ public class ChatActivity extends BaseActivity {
         mChatViewModel.loadMessages();
     }
 
-    @BindingAdapter("remote")
-    public static void remote(View view, boolean isRemote) {
+    @BindingAdapter({"chatViewModel", "messageViewModel"})
+    public static void remote(View view, ChatViewModel chatViewModel, MessageViewModel messageViewModel) {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) view.getLayoutParams();
-        if (isRemote) {
+        if (chatViewModel.isIncoming(messageViewModel)) {
             lp.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
         }
         else {
@@ -61,13 +62,23 @@ public class ChatActivity extends BaseActivity {
         @Override
         public MessageAdapter.MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            return new MessageViewHolder(MessageItemBinding.inflate(inflater, parent, false));
+            return new MessageViewHolder(DataBindingUtil.inflate(inflater, viewType, parent, false));
         }
 
         @Override
         public void onBindViewHolder(MessageAdapter.MessageViewHolder vh, int position) {
             MessageViewModel messageViewModel = mMessages.get(position);
             vh.bind(messageViewModel, mChatViewModel);
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (mChatViewModel.isIncoming(mMessages.get(position))) {
+                return R.layout.message_incoming;
+            }
+            else {
+                return R.layout.message_outgoing;
+            }
         }
 
         @Override
@@ -118,16 +129,16 @@ public class ChatActivity extends BaseActivity {
         };
 
         class MessageViewHolder extends RecyclerView.ViewHolder {
-            MessageItemBinding binding;
-            MessageViewHolder(MessageItemBinding messageItemBinding) {
+            ViewDataBinding binding;
+            MessageViewHolder(ViewDataBinding messageItemBinding) {
                 super(messageItemBinding.getRoot());
                 binding = messageItemBinding;
             }
 
             void bind(MessageViewModel messageViewModel, ChatViewModel chatViewModel) {
-                binding.setMessage(messageViewModel);
-                binding.setChat(chatViewModel);
-                binding.setContext(getApplicationContext());
+                binding.setVariable(BR.message, messageViewModel);
+                binding.setVariable(BR.chat, chatViewModel);
+                binding.setVariable(BR.context, getApplicationContext());
                 binding.executePendingBindings();
             }
         }
