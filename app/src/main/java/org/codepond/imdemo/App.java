@@ -19,6 +19,8 @@ package org.codepond.imdemo;
 import android.app.Application;
 import android.app.Service;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
@@ -30,6 +32,7 @@ public class App extends Application implements HasDispatchingServiceInjector {
     @Override
     public void onCreate() {
         super.onCreate();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         DaggerAppComponent.builder()
                 .application(this)
                 .build()
