@@ -2,17 +2,16 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.1.2-eap-69'
-        kotlinEapRepository = 'https://dl.bintray.com/kotlin/kotlin-eap-1.1'
+        kotlin_version = '1.1.2-4'
     }
     repositories {
-        maven {
-            url kotlinEapRepository
-        }
         jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.4.0-alpha6'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha1'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
@@ -26,7 +25,7 @@ allprojects {
     }
     repositories {
         maven {
-            url kotlinEapRepository
+            url "https://maven.google.com"
         }
         jcenter()
     }
