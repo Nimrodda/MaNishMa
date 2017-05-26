@@ -20,7 +20,7 @@ import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.support.AndroidSupportInjectionModule;
 
-@Component(modules = { AndroidSupportInjectionModule.class, AppModule.class, BuildersModule.class })
+@Component(modules = { AndroidSupportInjectionModule.class, AppModule.class })
 public interface AppComponent {
     @Component.Builder
     interface Builder {

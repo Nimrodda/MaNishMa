@@ -18,12 +18,10 @@ package org.codepond.imdemo;
 
 import android.content.Context;
 
-import org.codepond.imdemo.service.chat.MessagingServiceSubComponent;
-
 import dagger.Binds;
 import dagger.Module;
 
-@Module(subcomponents = { MessagingServiceSubComponent.class })
+@Module
 public abstract class AppModule {
     @Binds public abstract Context provideContext(App app);
 }

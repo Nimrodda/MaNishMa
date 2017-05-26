@@ -7,6 +7,7 @@ import android.databinding.ObservableList;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +17,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import org.codepond.imdemo.BR;
-import org.codepond.imdemo.BaseActivity;
 import org.codepond.imdemo.R;
 import org.codepond.imdemo.databinding.ActivityChatBinding;
 import org.codepond.imdemo.service.chat.FirebaseMessagingService;
 
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends AppCompatActivity {
     public static final String USER_ID = "extra_participant_jid";
     ChatViewModel mChatViewModel;
 
