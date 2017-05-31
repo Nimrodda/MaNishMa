@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package org.codepond.imdemo;
+package org.codepond.imdemo
 
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.android.support.AndroidSupportInjectionModule;
+import javax.inject.Scope
 
-@Component(modules = { AndroidSupportInjectionModule.class, AppModule.class })
-public interface AppComponent {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance Builder application(App application);
-        AppComponent build();
-    }
-    void inject(App app);
-}
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class ActivityScope

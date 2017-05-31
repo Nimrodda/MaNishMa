@@ -14,33 +14,32 @@
  * limitations under the License.
  */
 
-package org.codepond.imdemo;
+package org.codepond.imdemo
 
-import android.app.Application;
-import android.app.Service;
+import android.app.Activity
+import android.app.Application
 
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.FirebaseDatabase
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
 
-import javax.inject.Inject;
+import javax.inject.Inject
 
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasDispatchingServiceInjector;
+import dagger.android.HasActivityInjector
 
-public class App extends Application implements HasDispatchingServiceInjector {
-    @Inject DispatchingAndroidInjector<Service> mDispatchingAndroidInjector;
+class App : Application(), HasActivityInjector {
+    @Inject lateinit var mAndroidInjector: DispatchingAndroidInjector<Activity>
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    override fun onCreate() {
+        super.onCreate()
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         DaggerAppComponent.builder()
                 .application(this)
                 .build()
-                .inject(this);
+                .inject(this)
     }
 
-    @Override
-    public DispatchingAndroidInjector<Service> serviceInjector() {
-        return mDispatchingAndroidInjector;
+    override fun activityInjector(): AndroidInjector<Activity> {
+        return mAndroidInjector
     }
 }

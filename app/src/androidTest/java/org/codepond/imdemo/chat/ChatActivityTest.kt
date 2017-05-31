@@ -15,7 +15,7 @@ class ChatActivityTest {
     val mActivityTestRule: ActivityTestRule<ChatActivity> = object : ActivityTestRule<ChatActivity>(ChatActivity::class.java) {
         override fun getActivityIntent(): Intent {
             val intent = Intent()
-            intent.putExtra(ChatActivity.USER_ID, "user1@localhost/rLMACndayan")
+            intent.putExtra(ChatActivity.USER_ID, "user1")
             return intent
         }
     }
@@ -36,7 +36,7 @@ class ChatActivityTest {
     @Test
     fun receivedRemoteMessage_addedToList() {
         val messageText = "Hello"
-        val chatMessage = ChatMessage("user2@localhost/rLMACndayan", messageText)
+        val chatMessage = ChatMessage("user2", messageText)
         val activity = mActivityTestRule.activity
 
         mUiThreadTestRule.runOnUiThread { activity.mChatViewModel.onMessageReceived(chatMessage) }

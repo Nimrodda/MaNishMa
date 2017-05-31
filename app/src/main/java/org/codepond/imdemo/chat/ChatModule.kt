@@ -16,11 +16,12 @@
 
 package org.codepond.imdemo.chat
 
-import org.codepond.imdemo.ChatMessage
-import java.text.SimpleDateFormat
+import dagger.Module
+import dagger.Provides
+import javax.inject.Named
 
-data class MessageViewModel(private val chatMessage: ChatMessage, val position: Int) {
-    val author = chatMessage.from
-    val timestamp: String? = SimpleDateFormat.getTimeInstance().format(chatMessage.createdDate ?: 0)
-    val text = chatMessage.text
+@Module
+class ChatModule {
+    @Provides @Named("userId") fun provideUserId(chatActivity: ChatActivity): String = chatActivity.intent.getStringExtra(ChatActivity.USER_ID)
+    @Provides @Named("chatId") fun provideChatId(chatActivity: ChatActivity): String = chatActivity.intent.getStringExtra(ChatActivity.CHAT_ID)
 }

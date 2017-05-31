@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package org.codepond.imdemo;
+package org.codepond.imdemo
 
-import android.content.Context;
+import dagger.BindsInstance
+import dagger.Component
+import dagger.android.support.AndroidSupportInjectionModule
+import javax.inject.Singleton
 
-import dagger.Binds;
-import dagger.Module;
+@Singleton
+@Component(modules = arrayOf(AndroidSupportInjectionModule::class, AppModule::class))
+interface AppComponent {
+    @Component.Builder
+    interface Builder {
+        @BindsInstance fun application(application: App): Builder
+        fun build(): AppComponent
+    }
 
-@Module
-public abstract class AppModule {
-    @Binds public abstract Context provideContext(App app);
+    fun inject(app: App)
 }

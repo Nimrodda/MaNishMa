@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.kotlin.kapt'
 
 android {
     compileSdkVersion 25
@@ -28,6 +29,7 @@ android {
 }
 
 dependencies {
+    kapt "com.android.databinding:compiler:$androidGradlePluginVersion"
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibVersion"
 
@@ -37,13 +39,14 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$playServicesVersion"
 
     // Dagger dependencies
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.7.15'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.4.0'
     testImplementation 'org.hamcrest:hamcrest-core:1.3'
     testImplementation 'org.hamcrest:hamcrest-core:1.3'
 
