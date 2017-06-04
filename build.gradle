@@ -2,8 +2,8 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.1.2-2'
-        androidGradlePluginVersion = '3.0.0-alpha2'
+        kotlin_version = '1.1.2-4'
+        androidGradlePluginVersion = '3.0.0-alpha3'
     }
     repositories {
         jcenter()
