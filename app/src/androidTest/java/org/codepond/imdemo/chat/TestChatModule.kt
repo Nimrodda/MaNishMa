@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package org.codepond.imdemo
+package org.codepond.imdemo.chat
 
-import android.content.Context
-import dagger.Binds
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import org.codepond.imdemo.chat.ChatActivity
-import org.codepond.imdemo.chat.ChatModule
+import dagger.Provides
+import javax.inject.Named
 
 @Module
-abstract class AppModule {
-    @Binds abstract fun provideContext(app: App): Context
+class TestChatModule {
+    @Provides @Named("userId") fun provideUserId(chatActivity: ChatActivity): String = "Nimrod"
+    @Provides @Named("chatId") fun provideChatId(chatActivity: ChatActivity): String = "Nimrod-Joni"
 }

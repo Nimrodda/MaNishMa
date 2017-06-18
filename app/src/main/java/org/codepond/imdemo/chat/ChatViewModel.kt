@@ -25,6 +25,7 @@ class ChatViewModel
     fun clickSend() {
         if (messageText.get() != null && messageText.get().isNotEmpty()) {
             val chatMessage = ChatMessage(mUserId, messageText.get())
+            messages.add(MessageViewModel(chatMessage, messages.size))
             messageText.set("")
             mMessagingService.sendMessage(chatMessage)
         }
@@ -60,6 +61,8 @@ class ChatViewModel
     }
 
     override fun onMessageReceived(chatMessage: ChatMessage) {
-        messages.add(MessageViewModel(chatMessage, messages.size))
+        if (chatMessage.from != mUserId) {
+            messages.add(MessageViewModel(chatMessage, messages.size))
+        }
     }
 }

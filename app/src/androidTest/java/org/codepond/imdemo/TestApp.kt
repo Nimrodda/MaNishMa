@@ -16,14 +16,10 @@
 
 package org.codepond.imdemo
 
-import android.content.Context
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import org.codepond.imdemo.chat.ChatActivity
-import org.codepond.imdemo.chat.ChatModule
-
-@Module
-abstract class AppModule {
-    @Binds abstract fun provideContext(app: App): Context
+class TestApp : App() {
+    override fun inject() {
+        DaggerTestAppComponent.builder()
+                .build()
+                .inject(this)
+    }
 }

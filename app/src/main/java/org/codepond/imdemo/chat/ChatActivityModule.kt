@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package org.codepond.imdemo
+package org.codepond.imdemo.chat
 
-import android.content.Context
-import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import org.codepond.imdemo.chat.ChatActivity
-import org.codepond.imdemo.chat.ChatModule
 
 @Module
-abstract class AppModule {
-    @Binds abstract fun provideContext(app: App): Context
+abstract class ChatActivityModule {
+    @ContributesAndroidInjector(modules = arrayOf(ChatModule::class)) abstract fun contributeChatActivity(): ChatActivity
 }

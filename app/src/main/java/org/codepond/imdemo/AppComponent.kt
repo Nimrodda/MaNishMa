@@ -19,10 +19,10 @@ package org.codepond.imdemo
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
-import javax.inject.Singleton
+import org.codepond.imdemo.chat.ChatActivityModule
+import org.codepond.imdemo.service.chat.MessagingServiceModule
 
-@Singleton
-@Component(modules = arrayOf(AndroidSupportInjectionModule::class, AppModule::class))
+@Component(modules = arrayOf(AndroidSupportInjectionModule::class, AppModule::class, ChatActivityModule::class, MessagingServiceModule::class))
 interface AppComponent {
     @Component.Builder
     interface Builder {

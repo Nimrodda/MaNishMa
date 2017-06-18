@@ -21,6 +21,6 @@ import java.text.SimpleDateFormat
 
 data class MessageViewModel(private val chatMessage: ChatMessage, val position: Int) {
     val author = chatMessage.from
-    val timestamp: String? = SimpleDateFormat.getTimeInstance().format(chatMessage.createdDate ?: 0)
+    val timestamp: String? = SimpleDateFormat.getTimeInstance().format(chatMessage.createdDate ?: System.currentTimeMillis())
     val text = chatMessage.text
 }

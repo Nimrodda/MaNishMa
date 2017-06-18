@@ -27,19 +27,23 @@ import javax.inject.Inject
 
 import dagger.android.HasActivityInjector
 
-class App : Application(), HasActivityInjector {
+open class App : Application(), HasActivityInjector {
     @Inject lateinit var mAndroidInjector: DispatchingAndroidInjector<Activity>
 
     override fun onCreate() {
         super.onCreate()
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-        DaggerAppComponent.builder()
-                .application(this)
-                .build()
-                .inject(this)
+        inject()
     }
 
     override fun activityInjector(): AndroidInjector<Activity> {
         return mAndroidInjector
+    }
+
+    open fun inject() {
+        DaggerAppComponent.builder()
+                .application(this)
+                .build()
+                .inject(this)
     }
 }

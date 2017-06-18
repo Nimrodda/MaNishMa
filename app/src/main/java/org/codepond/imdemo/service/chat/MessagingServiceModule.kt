@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package org.codepond.imdemo
+package org.codepond.imdemo.service.chat
 
-import javax.inject.Scope
+import dagger.Binds
+import dagger.Module
 
-@Scope
-@Retention(AnnotationRetention.RUNTIME)
-annotation class ActivityScope
+@Module
+abstract class MessagingServiceModule {
+    @Binds abstract fun provideMessagingService(messagingService: FirebaseMessagingService): MessagingService
+}

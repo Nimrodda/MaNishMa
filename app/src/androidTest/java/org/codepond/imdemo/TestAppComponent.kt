@@ -16,14 +16,11 @@
 
 package org.codepond.imdemo
 
-import android.content.Context
-import dagger.Binds
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
-import org.codepond.imdemo.chat.ChatActivity
-import org.codepond.imdemo.chat.ChatModule
+import dagger.Component
+import dagger.android.support.AndroidSupportInjectionModule
+import org.codepond.imdemo.chat.TestChatActivityModule
 
-@Module
-abstract class AppModule {
-    @Binds abstract fun provideContext(app: App): Context
+@Component(modules = arrayOf(AndroidSupportInjectionModule::class, AppModule::class, TestChatActivityModule::class, TestServiceModule::class))
+interface TestAppComponent : AppComponent {
+    fun inject(app: TestApp)
 }

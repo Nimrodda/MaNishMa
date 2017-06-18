@@ -11,7 +11,6 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 
 import org.junit.Assert.*
-//import org.mockito.Mockito.*
 
 class ChatViewModelTest {
     @Rule @JvmField
