@@ -3,7 +3,7 @@ package org.codepond.imdemo.chat
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 
-import org.codepond.imdemo.ChatMessage
+import org.codepond.imdemo.model.ChatMessage
 import org.codepond.imdemo.R
 import org.codepond.imdemo.service.chat.MessagingService
 import javax.inject.Inject

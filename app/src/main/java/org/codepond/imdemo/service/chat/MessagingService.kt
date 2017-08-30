@@ -1,6 +1,6 @@
 package org.codepond.imdemo.service.chat
 
-import org.codepond.imdemo.ChatMessage
+import org.codepond.imdemo.model.ChatMessage
 
 interface MessagingService {
     interface OnMessageReceivedListener {

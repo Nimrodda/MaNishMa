@@ -16,7 +16,7 @@
 
 package org.codepond.imdemo.chat
 
-import org.codepond.imdemo.ChatMessage
+import org.codepond.imdemo.model.ChatMessage
 import java.text.SimpleDateFormat
 
 data class MessageViewModel(private val chatMessage: ChatMessage, val position: Int) {

@@ -23,7 +23,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 
-import org.codepond.imdemo.ChatMessage
+import org.codepond.imdemo.model.ChatMessage
 import javax.inject.Inject
 
 class FirebaseMessagingService @Inject constructor(): MessagingService, ChildEventListener {

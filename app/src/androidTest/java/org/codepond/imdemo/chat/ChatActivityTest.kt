@@ -3,7 +3,7 @@ package org.codepond.imdemo.chat
 import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.UiThreadTestRule
 import android.support.test.runner.AndroidJUnit4
-import org.codepond.imdemo.ChatMessage
+import org.codepond.imdemo.model.ChatMessage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

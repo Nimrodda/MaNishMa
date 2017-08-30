@@ -1,7 +1,7 @@
 package org.codepond.imdemo.chat
 
 import com.nhaarman.mockito_kotlin.*
-import org.codepond.imdemo.ChatMessage
+import org.codepond.imdemo.model.ChatMessage
 import org.codepond.imdemo.R
 import org.codepond.imdemo.service.chat.MessagingService
 import org.junit.After
