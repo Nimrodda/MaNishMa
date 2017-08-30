@@ -16,7 +16,7 @@ The project attempts to adhere to the best practices in Android App development.
 * Dagger Android is used for dependency injection
 * Abstraction - services are abstracted using interfaces so they can be easily changed with Dagger. One example is `FirebaseMessagingService` under `realtimedb` branch, which is replaced by `XmppMessagingService` in other branches.
 * Unit testing the model in isolation
-* Espresso automated UI testing
+* Espresso automated UI testing using Robot pattern
 
 ### Repository branches
 
