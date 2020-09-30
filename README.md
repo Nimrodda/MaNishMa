@@ -1,4 +1,5 @@
 # MaNishMa
+#it's android app like whatsapp
 
 MaNishMa is a WhatsApp like chat app based on Firebase Realtime Database. 
 The main motivation behind this app is purely for learning purposes. Experimenting with different technologies, techniques and architectures. 
